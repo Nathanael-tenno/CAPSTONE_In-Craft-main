@@ -67,7 +67,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     const compressedImageBuffer = await compressImage(file);
 
     // Upload file ke Google Cloud Storage
-    const fileUpload = storage.bucket("capstone_incraft").file(filePath);
+    const fileUpload = storage.bucket("capstone-389205.appspot.com").file(filePath);
     await fileUpload.save(compressedImageBuffer, {
       contentType: file.mimetype,
     });
