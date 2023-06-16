@@ -2,7 +2,7 @@ const express = require("express");
 const { Storage } = require("@google-cloud/storage");
 const { Firestore } = require("@google-cloud/firestore");
 const multer = require("multer");
-const { spawn } = require("child_process");
+const { spawn } = require('child_process');
 const sharp = require("sharp");
 const { nanoid } = require("nanoid");
 
@@ -67,7 +67,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     const compressedImageBuffer = await compressImage(file);
 
     // Upload file ke Google Cloud Storage
-    const fileUpload = storage.bucket("capstone-389205.appspot.com").file(filePath);
+    const fileUpload = storage.bucket("capstone_incraft").file(filePath);
     await fileUpload.save(compressedImageBuffer, {
       contentType: file.mimetype,
     });
@@ -88,22 +88,22 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     const docRef = await db.collection("file").add(photoData);
 
     // Kirim link foto ke model untuk prediksi
-    const pythonProcess = spawn("python", ["model_loader.py", signedUrl]);
+    const pythonProcess = spawn('python' ['model_loader.py', signedUrl]);
 
     let prediction = "";
     let errorOutput = "";
 
-    pythonProcess.stdout.on("data", (data) => {
+    pythonProcess.stdout.on('data', (data) => {
       // Data yang diterima dari skrip Python (hasil prediksi)
       prediction += data.toString();
     });
 
-    pythonProcess.stderr.on("data", (data) => {
+    pythonProcess.stderr.on('data', (data) => {
       // Kesalahan yang terjadi di skrip Python
       errorOutput += data.toString();
     });
 
-    pythonProcess.on("close", async (code) => {
+    pythonProcess.on('close', async (code) => {
       // Skrip Python selesai dieksekusi
       console.log(`Child process exited with code ${code}`);
 
